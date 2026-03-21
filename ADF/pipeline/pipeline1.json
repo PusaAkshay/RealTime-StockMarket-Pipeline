@@ -1,0 +1,130 @@
+{
+	"name": "pipeline1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Notebook1",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Start_StreamAnalytics ",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/singamshiva78_gmail.com#ext#@singamshiva78gmail.onmicrosoft.com/RealTime-StockMarket-Pipeline/Databricks/stock_producer"
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_Databricks1",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Wait1",
+				"type": "Wait",
+				"dependsOn": [
+					{
+						"activity": "Notebook1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 180
+				}
+			},
+			{
+				"name": "Job1",
+				"type": "DatabricksJob",
+				"dependsOn": [
+					{
+						"activity": "Stop_StreamAnalytics",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"jobId": "329424884993899"
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_Databricks1",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Start_StreamAnalytics ",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": "https://management.azure.com/subscriptions/5517cc6b-fb89-45bc-8d91-29266321bc10/resourceGroups/stockmarket-rg/providers/Microsoft.StreamAnalytics/streamingjobs/stock-stream-analytics/start?api-version=2017-04-01-preview",
+					"body": {
+						"outputStartMode": "LastOutputEventTime"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://management.azure.com/"
+					}
+				}
+			},
+			{
+				"name": "Stop_StreamAnalytics",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Wait1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": "https://management.azure.com/subscriptions/5517cc6b-fb89-45bc-8d91-29266321bc10/resourceGroups/stockmarket-rg/providers/Microsoft.StreamAnalytics/streamingjobs/stock-stream-analytics/stop?api-version=2017-04-01-preview",
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://management.azure.com/ "
+					}
+				}
+			}
+		],
+		"annotations": []
+	}
+}
