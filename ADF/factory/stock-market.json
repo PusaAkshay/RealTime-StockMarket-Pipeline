@@ -1,0 +1,9 @@
+{
+	"name": "stock-market",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "997be0b2-f190-4df3-98b8-136ee36e2962",
+		"tenantId": "2e185e42-326c-41c0-9226-6487eff382b8"
+	}
+}
