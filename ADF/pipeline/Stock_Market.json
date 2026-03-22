@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "Stock_Market",
 	"properties": {
 		"activities": [
 			{
@@ -7,7 +7,7 @@
 				"type": "Wait",
 				"dependsOn": [
 					{
-						"activity": "Notebook1",
+						"activity": "Stock_Producer",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -19,7 +19,7 @@
 				}
 			},
 			{
-				"name": "Job1",
+				"name": "Bronze_Silver_DLT_Job",
 				"type": "DatabricksJob",
 				"dependsOn": [
 					{
@@ -98,7 +98,7 @@
 				}
 			},
 			{
-				"name": "Notebook1",
+				"name": "Stock_Producer",
 				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
