@@ -82,8 +82,13 @@ Alpha Vantage API (Stock Prices)
 
 ```
 RealTime-StockMarket-Pipeline/
+├
 ├── ADF/
-│   └── pipeline1.json           # ADF pipeline definition
+│   ├── datasets/
+│   ├── factories/
+│   ├── linked_services/
+│   └── pipelines/          
+│   
 ├── Databricks/
 │   ├── stock_producer.py        # Producer: API → Event Hubs
 │   ├── Autoloader.ipynb         # Autoloader: raw → bronze
