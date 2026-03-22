@@ -1,0 +1,686 @@
+{
+  "datasets": [
+    {
+      "name": "1ad388a6",
+      "displayName": "Gold Stock Market Snapshot Latest Trading Data",
+      "queryLines": [
+        "SELECT \r\n",
+        "    ticker,\r\n",
+        "    current_price,\r\n",
+        "    change_pct,\r\n",
+        "    market_status,\r\n",
+        "    price_change_category,\r\n",
+        "    volume_category,\r\n",
+        "    CAST(volume AS DOUBLE) as volume,\r\n",
+        "    volatility,\r\n",
+        "    price_range_pct,\r\n",
+        "    trade_date,\r\n",
+        "    timestamp\r\n",
+        "FROM stockmarket.stockmarket_db.gold_stocks\r\n",
+        "WHERE trade_date = (\r\n",
+        "    SELECT MAX(trade_date) \r\n",
+        "    FROM stockmarket.stockmarket_db.gold_stocks\r\n",
+        ")\r\n",
+        "ORDER BY current_price DESC"
+      ],
+      "catalog": "stockmarket",
+      "schema": "stockmarket_db"
+    },
+    {
+      "name": "c28b81e3",
+      "displayName": "counter no of stocks latest",
+      "queryLines": [
+        "SELECT\r\n",
+        "  *\r\n",
+        "FROM\r\n",
+        "  stockmarket.stockmarket_db.gold_stocks\r\n",
+        "WHERE\r\n",
+        "  trade_date\r\n",
+        "    = (\r\n",
+        "      SELECT\r\n",
+        "        MAX(trade_date)\r\n",
+        "      FROM\r\n",
+        "        stockmarket.stockmarket_db.gold_stocks\r\n",
+        "    )"
+      ]
+    },
+    {
+      "name": "8e75d0d0",
+      "displayName": "Counter per stock: MSFT",
+      "queryLines": [
+        "SELECT current_price\r\n",
+        "FROM stockmarket.stockmarket_db.gold_stocks\r\n",
+        "WHERE ticker = 'MSFT'\r\n",
+        "AND trade_date = (\r\n",
+        "    SELECT MAX(trade_date)\r\n",
+        "    FROM stockmarket.stockmarket_db.gold_stocks\r\n",
+        ")"
+      ]
+    },
+    {
+      "name": "904a8d04",
+      "displayName": "Counter per stock APPL",
+      "queryLines": [
+        "SELECT current_price, change_pct\r\n",
+        "FROM stockmarket.stockmarket_db.gold_stocks\r\n",
+        "WHERE ticker = 'AAPL'\r\n",
+        "AND trade_date = (\r\n",
+        "    SELECT MAX(trade_date)\r\n",
+        "    FROM stockmarket.stockmarket_db.gold_stocks\r\n",
+        ")"
+      ],
+      "catalog": "stockmarket",
+      "schema": "stockmarket_db"
+    },
+    {
+      "name": "718e30ba",
+      "displayName": "counter per stock GOOGL",
+      "queryLines": [
+        "SELECT current_price\r\n",
+        "FROM stockmarket.stockmarket_db.gold_stocks\r\n",
+        "WHERE ticker = 'GOOGL'\r\n",
+        "AND trade_date = (\r\n",
+        "    SELECT MAX(trade_date)\r\n",
+        "    FROM stockmarket.stockmarket_db.gold_stocks\r\n",
+        ")"
+      ],
+      "catalog": "stockmarket",
+      "schema": "stockmarket_db"
+    },
+    {
+      "name": "3ba96e5e",
+      "displayName": "counter per stock AMZN",
+      "queryLines": [
+        "SELECT current_price\r\n",
+        "FROM stockmarket.stockmarket_db.gold_stocks\r\n",
+        "WHERE ticker = 'AMZN'\r\n",
+        "AND trade_date = (\r\n",
+        "    SELECT MAX(trade_date)\r\n",
+        "    FROM stockmarket.stockmarket_db.gold_stocks\r\n",
+        ")"
+      ],
+      "catalog": "stockmarket",
+      "schema": "stockmarket_db"
+    },
+    {
+      "name": "8a5965b8",
+      "displayName": "counter per stock TSLA",
+      "queryLines": [
+        "SELECT current_price\r\n",
+        "FROM stockmarket.stockmarket_db.gold_stocks\r\n",
+        "WHERE ticker = 'TSLA'\r\n",
+        "AND trade_date = (\r\n",
+        "    SELECT MAX(trade_date)\r\n",
+        "    FROM stockmarket.stockmarket_db.gold_stocks\r\n",
+        ")"
+      ],
+      "catalog": "stockmarket",
+      "schema": "stockmarket_db"
+    }
+  ],
+  "pages": [
+    {
+      "name": "41361ba0",
+      "displayName": "Stock Market Monitor",
+      "layout": [
+        {
+          "widget": {
+            "name": "89adcdc2",
+            "multilineTextboxSpec": {
+              "lines": [
+                "Stock\\_Market\\_Monitor"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "current-stock-prices",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "1ad388a6",
+                  "fields": [
+                    {
+                      "name": "ticker",
+                      "expression": "`ticker`"
+                    },
+                    {
+                      "name": "current_price",
+                      "expression": "`current_price`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Current Stock Prices"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "ticker",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "current_price",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 4,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "percent-change-today",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "1ad388a6",
+                  "fields": [
+                    {
+                      "name": "change_pct",
+                      "expression": "`change_pct`"
+                    },
+                    {
+                      "name": "ticker",
+                      "expression": "`ticker`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "% Change Today"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "change_pct",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "ticker",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 10,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "total-stocks-tracked",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "c28b81e3",
+                  "fields": [
+                    {
+                      "name": "count(*)",
+                      "expression": "COUNT(`*`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Total Stocks Tracked"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "count(*)"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 10,
+            "y": 1,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "1abc1999",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "1ad388a6",
+                  "fields": [
+                    {
+                      "name": "count(ticker)",
+                      "expression": "COUNT(`ticker`)"
+                    },
+                    {
+                      "name": "market_status",
+                      "expression": "`market_status`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Bull vs Bear Market Sentiment",
+                "showTitle": true
+              },
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "count(ticker)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Count of Tickers"
+                },
+                "color": {
+                  "fieldName": "market_status",
+                  "legend": {
+                    "position": "right"
+                  },
+                  "displayName": "market_status",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 10,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "stock-details",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "1ad388a6",
+                  "fields": [
+                    {
+                      "name": "ticker",
+                      "expression": "`ticker`"
+                    },
+                    {
+                      "name": "current_price",
+                      "expression": "`current_price`"
+                    },
+                    {
+                      "name": "change_pct",
+                      "expression": "`change_pct`"
+                    },
+                    {
+                      "name": "price_change_category",
+                      "expression": "`price_change_category`"
+                    },
+                    {
+                      "name": "volume_category",
+                      "expression": "`volume_category`"
+                    },
+                    {
+                      "name": "market_status",
+                      "expression": "`market_status`"
+                    },
+                    {
+                      "name": "volatility",
+                      "expression": "`volatility`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Stock Details"
+              },
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "ticker"
+                  },
+                  {
+                    "fieldName": "current_price"
+                  },
+                  {
+                    "fieldName": "change_pct"
+                  },
+                  {
+                    "fieldName": "price_change_category"
+                  },
+                  {
+                    "fieldName": "volume_category"
+                  },
+                  {
+                    "fieldName": "market_status"
+                  },
+                  {
+                    "fieldName": "volatility"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 16,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "trading-volume",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "1ad388a6",
+                  "fields": [
+                    {
+                      "name": "ticker",
+                      "expression": "`ticker`"
+                    },
+                    {
+                      "name": "volume",
+                      "expression": "`volume`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Trading Volume"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "ticker",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "volume",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 4,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "msft-price",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "8e75d0d0",
+                  "fields": [
+                    {
+                      "name": "sum(current_price)",
+                      "expression": "SUM(`current_price`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "MSFT Price"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(current_price)"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 1,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "appl-price",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "904a8d04",
+                  "fields": [
+                    {
+                      "name": "sum(current_price)",
+                      "expression": "SUM(`current_price`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "APPL Price "
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(current_price)"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 1,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "googl-price",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "718e30ba",
+                  "fields": [
+                    {
+                      "name": "sum(current_price)",
+                      "expression": "SUM(`current_price`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "GOOGL Price\n"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(current_price)"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 1,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "amaz-price",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "3ba96e5e",
+                  "fields": [
+                    {
+                      "name": "sum(current_price)",
+                      "expression": "SUM(`current_price`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "AMAZ Price\n"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(current_price)"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 1,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "tsla-price",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "8a5965b8",
+                  "fields": [
+                    {
+                      "name": "sum(current_price)",
+                      "expression": "SUM(`current_price`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "TSLA Price\n"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(current_price)"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 1,
+            "width": 2,
+            "height": 3
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
