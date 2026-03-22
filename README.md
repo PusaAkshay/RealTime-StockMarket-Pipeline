@@ -84,8 +84,8 @@ Alpha Vantage API (Stock Prices)
 RealTime-StockMarket-Pipeline/
 ├
 ├── ADF/
-│   ├── datasets/
-│   ├── factories/
+│   ├
+│   ├── factory/
 │   ├── linked_services/
 │   └── pipelines/          
 │   
